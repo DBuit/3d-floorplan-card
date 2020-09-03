@@ -2529,18 +2529,6 @@ async function moreInfo(entity, large=false) {
   return el;
 }
 
-function bindActionHandler(element, options={}) {
-  customElements.whenDefined("long-press").then(() => {
-    const longpress = document.body.querySelector("long-press");
-    longpress.bind(element);
-  });
-  customElements.whenDefined("action-handler").then(() => {
-    const actionHandler = document.body.querySelector("action-handler");
-    actionHandler.bind(element, options);
-  });
-  return element;
-}
-
 /**
  * Parse or format dates
  * @class fecha
@@ -2868,7 +2856,7 @@ fecha.parse = function (dateStr, format, i18nSettings) {
   return date;
 };
 
-var a=function(){try{(new Date).toLocaleDateString("i");}catch(e){return "RangeError"===e.name}return !1}()?function(e,t){return e.toLocaleDateString(t,{year:"numeric",month:"long",day:"numeric"})}:function(t){return fecha.format(t,"mediumDate")},n=function(){try{(new Date).toLocaleString("i");}catch(e){return "RangeError"===e.name}return !1}()?function(e,t){return e.toLocaleString(t,{year:"numeric",month:"long",day:"numeric",hour:"numeric",minute:"2-digit"})}:function(t){return fecha.format(t,"haDateTime")},r=function(){try{(new Date).toLocaleTimeString("i");}catch(e){return "RangeError"===e.name}return !1}()?function(e,t){return e.toLocaleTimeString(t,{hour:"numeric",minute:"2-digit"})}:function(t){return fecha.format(t,"shortTime")};function d(e){return e.substr(0,e.indexOf("."))}var R=["closed","locked","off"],A=function(e,t,a,n){n=n||{},a=null==a?{}:a;var r=new Event(t,{bubbles:void 0===n.bubbles||n.bubbles,cancelable:Boolean(n.cancelable),composed:void 0===n.composed||n.composed});return r.detail=a,e.dispatchEvent(r),r};var V=function(e,t,a){void 0===a&&(a=!1),a?history.replaceState(null,"",t):history.pushState(null,"",t),A(window,"location-changed",{replace:a});},W=function(e,t,a){void 0===a&&(a=!0);var n,r=d(t),i="group"===r?"homeassistant":r;switch(r){case"lock":n=a?"unlock":"lock";break;case"cover":n=a?"open_cover":"close_cover";break;default:n=a?"turn_on":"turn_off";}return e.callService(i,n,{entity_id:t})},Y=function(e,t){var a=R.includes(e.states[t].state);return W(e,t,a)};//# sourceMappingURL=index.m.js.map
+var a=function(){try{(new Date).toLocaleDateString("i");}catch(e){return "RangeError"===e.name}return !1}()?function(e,t){return e.toLocaleDateString(t,{year:"numeric",month:"long",day:"numeric"})}:function(t){return fecha.format(t,"mediumDate")},n=function(){try{(new Date).toLocaleString("i");}catch(e){return "RangeError"===e.name}return !1}()?function(e,t){return e.toLocaleString(t,{year:"numeric",month:"long",day:"numeric",hour:"numeric",minute:"2-digit"})}:function(t){return fecha.format(t,"haDateTime")},r=function(){try{(new Date).toLocaleTimeString("i");}catch(e){return "RangeError"===e.name}return !1}()?function(e,t){return e.toLocaleTimeString(t,{hour:"numeric",minute:"2-digit"})}:function(t){return fecha.format(t,"shortTime")};function d(e){return e.substr(0,e.indexOf("."))}var w="hass:bookmark",R=["closed","locked","off"],A=function(e,t,a,n){n=n||{},a=null==a?{}:a;var r=new Event(t,{bubbles:void 0===n.bubbles||n.bubbles,cancelable:Boolean(n.cancelable),composed:void 0===n.composed||n.composed});return r.detail=a,e.dispatchEvent(r),r},j={alert:"hass:alert",automation:"hass:playlist-play",calendar:"hass:calendar",camera:"hass:video",climate:"hass:thermostat",configurator:"hass:settings",conversation:"hass:text-to-speech",device_tracker:"hass:account",fan:"hass:fan",group:"hass:google-circles-communities",history_graph:"hass:chart-line",homeassistant:"hass:home-assistant",homekit:"hass:home-automation",image_processing:"hass:image-filter-frames",input_boolean:"hass:drawing",input_datetime:"hass:calendar-clock",input_number:"hass:ray-vertex",input_select:"hass:format-list-bulleted",input_text:"hass:textbox",light:"hass:lightbulb",mailbox:"hass:mailbox",notify:"hass:comment-alert",person:"hass:account",plant:"hass:flower",proximity:"hass:apple-safari",remote:"hass:remote",scene:"hass:google-pages",script:"hass:file-document",sensor:"hass:eye",simple_alarm:"hass:bell",sun:"hass:white-balance-sunny",switch:"hass:flash",timer:"hass:timer",updater:"hass:cloud-upload",vacuum:"hass:robot-vacuum",water_heater:"hass:thermometer",weblink:"hass:open-in-new"};function I(e,t){if(e in j)return j[e];switch(e){case"alarm_control_panel":switch(t){case"armed_home":return "hass:bell-plus";case"armed_night":return "hass:bell-sleep";case"disarmed":return "hass:bell-outline";case"triggered":return "hass:bell-ring";default:return "hass:bell"}case"binary_sensor":return t&&"off"===t?"hass:radiobox-blank":"hass:checkbox-marked-circle";case"cover":return "closed"===t?"hass:window-closed":"hass:window-open";case"lock":return t&&"unlocked"===t?"hass:lock-open":"hass:lock";case"media_player":return t&&"off"!==t&&"idle"!==t?"hass:cast-connected":"hass:cast";case"zwave":switch(t){case"dead":return "hass:emoticon-dead";case"sleeping":return "hass:sleep";case"initializing":return "hass:timer-sand";default:return "hass:z-wave"}default:return console.warn("Unable to find icon for domain "+e+" ("+t+")"),w}}var V=function(e,t,a){void 0===a&&(a=!1),a?history.replaceState(null,"",t):history.pushState(null,"",t),A(window,"location-changed",{replace:a});},W=function(e,t,a){void 0===a&&(a=!0);var n,r=d(t),i="group"===r?"homeassistant":r;switch(r){case"lock":n=a?"unlock":"lock";break;case"cover":n=a?"open_cover":"close_cover";break;default:n=a?"turn_on":"turn_off";}return e.callService(i,n,{entity_id:t})},Y=function(e,t){var a=R.includes(e.states[t].state);return W(e,t,a)};//# sourceMappingURL=index.m.js.map
 
 const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0;
 class ActionHandler extends HTMLElement {
@@ -3083,18 +3071,29 @@ class ThreeDFloorplan extends LitElement {
                     style += prop + ":" + button.position[prop] + ";";
                 });
             }
+            var offStates = ['off', 'unavailable'];
+            if (button.offStates) {
+                offStates = button.offStates;
+            }
+            var label = "";
+            if ("label" in button) {
+                label = this._getTemplate(undefined, button.label);
+            }
             return html `
-            <state-badge
-              .stateObj="${stateObj}"
+            <div
               class="button clickable"
-              slot="item-icon"
               style="${style}"
               @action=${(ev) => this._handleAction(ev, button)}
               .actionHandler=${actionHandler({
                 hasHold: true,
                 hasDoubleTap: true,
             })}
-            ></state-badge>
+            >
+              <ha-icon data-state="${offStates.includes(stateObj.state) ? 'off' : 'on'}" icon="${button.offIcon ? offStates.includes(stateObj.state) ? button.offIcon : button.icon : button.icon || stateObj.attributes.icon || I(d(stateObj.entity_id), stateObj.state)}"></ha-icon>
+              ${label != "" ? html `
+                <span class="label">${label}</span>
+              ` : html ``}
+            </div>
           `;
         })}
         
@@ -3112,12 +3111,7 @@ class ThreeDFloorplan extends LitElement {
             this._customAction(button.hold_action, button);
         }
     }
-    firstUpdated() {
-        var myNodelist = this.shadowRoot.querySelectorAll('.clickable');
-        for (var i = 0; i < myNodelist.length; i++) {
-            bindActionHandler(myNodelist[i], { hasHold: true, hasDoubleClick: true });
-        }
-    }
+    firstUpdated() { }
     _evalTemplate(state, func) {
         try {
             return new Function('states', 'entity', 'user', 'hass', 'variables', 'html', `'use strict'; ${func}`).call(this, this.hass.states, state, this.hass.user, this.hass, html);
@@ -3236,6 +3230,14 @@ class ThreeDFloorplan extends LitElement {
         .wrapper .base .buttons .button {
             position:absolute;
             cursor: pointer;
+            display:flex;
+            flex-direction:column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        ha-icon[data-state="on"] {
+          color: var(--paper-item-icon-active-color, #f7d959);
         }
     `;
     }

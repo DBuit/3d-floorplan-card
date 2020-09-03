@@ -92,19 +92,31 @@ class ThreeDFloorplan extends LitElement {
               style += prop+":"+button.position[prop]+";";
             });
           }
+          var offStates = ['off', 'unavailable'];
+          if(button.offStates) {
+            offStates = button.offStates;
+          }
+
+          var label = ""
+          if("label" in button) {
+            label = this._getTemplate(undefined, button.label);
+          }
 
           return html`
-            <state-badge
-              .stateObj="${stateObj}"
+            <div
               class="button clickable"
-              slot="item-icon"
               style="${style}"
               @action=${(ev) => this._handleAction(ev, button)}
               .actionHandler=${actionHandler({
                 hasHold: true,
                 hasDoubleTap: true,
               })}
-            ></state-badge>
+            >
+              <ha-icon data-state="${offStates.includes(stateObj.state) ? 'off': 'on'}" icon="${button.offIcon ? offStates.includes(stateObj.state) ? button.offIcon : button.icon : button.icon || stateObj.attributes.icon || domainIcon(computeDomain(stateObj.entity_id), stateObj.state)}"></ha-icon>
+              ${label != "" ? html`
+                <span class="label">${label}</span>
+              ` : html``}
+            </div>
           `;
         })}
         
@@ -123,12 +135,7 @@ class ThreeDFloorplan extends LitElement {
     }
   }
   
-  firstUpdated() {
-    var myNodelist = this.shadowRoot.querySelectorAll('.clickable')
-    for (var i = 0; i < myNodelist.length; i++) {
-      bindActionHandler(myNodelist[i], {hasHold: true, hasDoubleClick: true});
-    }
-  }
+  firstUpdated() { }
 
   _evalTemplate(state: HassEntity | undefined, func: any): any {
     try {
@@ -259,6 +266,14 @@ class ThreeDFloorplan extends LitElement {
         .wrapper .base .buttons .button {
             position:absolute;
             cursor: pointer;
+            display:flex;
+            flex-direction:column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        ha-icon[data-state="on"] {
+          color: var(--paper-item-icon-active-color, #f7d959);
         }
     `;
   }  
