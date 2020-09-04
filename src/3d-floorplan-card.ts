@@ -37,97 +37,95 @@ class ThreeDFloorplan extends LitElement {
       }
     }
     return html`
-    <div class="wrapper">
-      <div class="base">
-        <img src="${this.config.baseImage}" />
-        
-        ${this.config.overlays.map(overlay => {
-          var offStates = ['off', 'unavailable'];
-          if(overlay.offStates) {
-            offStates = overlay.offStates;
-          }
-          const stateObj = this.hass.states[overlay.entity];
-          let conditionStyle = "";
-          if("conditionStyle" in overlay) {
-            conditionStyle = this._getTemplate(undefined, overlay.conditionStyle);
-          }
-          if(overlay.type == 'state') {
-            return html`
-              <div class="overlay ${offStates.includes(stateObj.state) ? '': 'on'}" id="toggle" style="${conditionStyle != "" ? conditionStyle : ''}">
-                <img src="${overlay.image}" />
-              </div>
-            `;
-          } else if(overlay.type == 'conditional') {
-            let image = this._getTemplate(undefined, overlay.condition);
-            return html`
-              <div class="overlay on" id="toggle" style="${conditionStyle != "" ? conditionStyle : ''}">
-                <img src="${image}" />
-              </div>
-            `;
-            return html``;
-          } else {
-            return html``;
-          }
+    <div class="wrapper ${"position" in this.config ? this.config.position : "horizontal"}">
+      ${this.config.floorplans.map(floorplan => {
+        return html`
+          <div class="base">
+            <img src="${floorplan.baseImage}" />
+            
+            ${"buttons" in floorplan ? html`
+            ${floorplan.overlays.map(overlay => {
+              var offStates = ['off', 'unavailable'];
+              if(overlay.offStates) {
+                offStates = overlay.offStates;
+              }
+              const stateObj = this.hass.states[overlay.entity];
+              let conditionStyle = "";
+              if("conditionStyle" in overlay) {
+                conditionStyle = this._getTemplate(undefined, overlay.conditionStyle);
+              }
+              if(overlay.type == 'state') {
+                return html`
+                  <div class="overlay ${offStates.includes(stateObj.state) ? '': 'on'}" id="toggle" style="${conditionStyle != "" ? conditionStyle : ''}">
+                    <img src="${overlay.image}" />
+                  </div>
+                `;
+              } else if(overlay.type == 'conditional') {
+                let image = this._getTemplate(undefined, overlay.condition);
+                return html`
+                  <div class="overlay on" id="toggle" style="${conditionStyle != "" ? conditionStyle : ''}">
+                    <img src="${image}" />
+                  </div>
+                `;
+                return html``;
+              } else {
+                return html``;
+              }            
+            })}` : html ``}  
 
-        
-        // <div class="overlay" id="toggle">
-        //   <img src="https://buithooff.duckdns.org/local/floorplan/floorplan_house_eethoek.png" />
-        // </div>
-        
-        })}    
+            <div class="buttons">
+              
+            ${"buttons" in floorplan ? html`
+            ${floorplan.buttons.map(button => {
+              const stateObj = this.hass.states[button.entity];
+              var style = "";
+              if("style" in button && buttonStyles[button.style] ) {
+                Object.keys(buttonStyles[button.style]).forEach((prop) => {
+                  style += prop+":"+buttonStyles[button.style][prop]+";";
+                });
+              }
+              if("position" in button) {
+                Object.keys(button.position).forEach((prop) => {
+                  style += prop+":"+button.position[prop]+";";
+                });
+              }
+              var offStates = ['off', 'unavailable'];
+              if(button.offStates) {
+                offStates = button.offStates;
+              }
 
-        <div class="buttons">
-          
+              var label = ""
+              if("label" in button) {
+                label = this._getTemplate(undefined, button.label);
+              }
 
-        ${this.config.buttons.map(button => {
-          const stateObj = this.hass.states[button.entity];
-          var style = "";
-          if("style" in button && buttonStyles[button.style] ) {
-            Object.keys(buttonStyles[button.style]).forEach((prop) => {
-              style += prop+":"+buttonStyles[button.style][prop]+";";
-            });
-          }
-          if("position" in button) {
-            Object.keys(button.position).forEach((prop) => {
-              style += prop+":"+button.position[prop]+";";
-            });
-          }
-          var offStates = ['off', 'unavailable'];
-          if(button.offStates) {
-            offStates = button.offStates;
-          }
-
-          var label = ""
-          if("label" in button) {
-            label = this._getTemplate(undefined, button.label);
-          }
-
-          return html`
-            <div
-              class="button clickable"
-              style="${style}"
-              @action=${(ev) => this._handleAction(ev, button)}
-              .actionHandler=${actionHandler({
-                hasHold: true,
-                hasDoubleTap: true,
-              })}
-            >
-              <ha-icon data-state="${offStates.includes(stateObj.state) ? 'off': 'on'}" icon="${button.offIcon ? offStates.includes(stateObj.state) ? button.offIcon : button.icon : button.icon || stateObj.attributes.icon || domainIcon(computeDomain(stateObj.entity_id), stateObj.state)}"></ha-icon>
-              ${label != "" ? html`
-                <span class="label">${label}</span>
-              ` : html``}
+              return html`
+                <div
+                  class="button clickable"
+                  style="${style}"
+                  @action=${(ev) => this._handleAction(ev, button)}
+                  .actionHandler=${actionHandler({
+                    hasHold: true,
+                    hasDoubleTap: true,
+                  })}
+                >
+                  <ha-icon data-state="${offStates.includes(stateObj.state) ? 'off': 'on'}" icon="${button.offIcon ? offStates.includes(stateObj.state) ? button.offIcon : button.icon : button.icon || stateObj.attributes.icon || domainIcon(computeDomain(stateObj.entity_id), stateObj.state)}"></ha-icon>
+                  ${label != "" ? html`
+                    <span class="label">${label}</span>
+                  ` : html``}
+                </div>
+              `;
+            })}` : html ``}
+            
             </div>
-          `;
-        })}
-        
-        </div>
-      </div>
+          </div>
+        `
+      })}
     </div>
     `;
   }
 
   _handleAction(ev, button): void {
-    console.log(ev);
     if (ev.detail.action && ev.detail.action == "tap" && button.tap_action) {
       this._customAction(button.tap_action, button);
     } else if(ev.detail.action && ev.detail.action == "hold" && button.hold_action) {
@@ -228,12 +226,24 @@ class ThreeDFloorplan extends LitElement {
         }
 
         .wrapper {
-          display:block;
+          display:flex;
           position:relative;
+        }
+        .wrapper.horizontal {
+          flex-direction: row;
+        }
+        .wrapper.horizontal .base {
+          max-width: 50%;
+        }
+        .wrapper.vertical {
+          flex-direction: column;
+        }
+        .wrapper.vertical .base {
+          max-height: 50%;
         }
         .wrapper .base {
           position:relative;
-          height:100vh;
+          height: calc(100vh - 50px);
           display:inline-block;
         }
         .wrapper .base img {
