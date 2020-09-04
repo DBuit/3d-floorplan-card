@@ -3189,7 +3189,7 @@ class ThreeDFloorplan extends LitElement {
     static get styles() {
         return css `
         :host {
-          
+          height: calc(100vh - 50px);
         }
 
         .wrapper {
@@ -3210,7 +3210,6 @@ class ThreeDFloorplan extends LitElement {
         }
         .wrapper .base {
           position:relative;
-          height: calc(100vh - 50px);
           display:inline-block;
         }
         .wrapper .base img {
